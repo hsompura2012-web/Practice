@@ -10,6 +10,7 @@ dnf install nodejs -y >> /var/tmp/roboshop.log
 
 cp ${Component}.service /etc/systemd/system/${Component}.service
 
+
 echo -e ${Color} Curl Files download ${CEnd}
 useradd roboshop >> /var/tmp/roboshop.log
 mkdir /app >> /var/tmp/roboshop.log
@@ -30,4 +31,20 @@ systemService(){
   systemctl enable ${Component} >> /var/tmp/roboshop.log
   systemctl restart ${Component} >> /var/tmp/roboshop.log
 
+}
+
+JavaIns(){
+
+  dnf install maven -y
+  useradd roboshop
+
+  cp ${Component}.service /etc/systemd/system/${Component}.service
+
+  mkdir /app
+  curl -L -o /tmp/${Component}.zip https://roboshop-artifacts.s3.amazonaws.com/${Component}-v3.zip
+  cd /app
+  unzip /tmp/${Component}.zip
+  cd /app
+  mvn clean package
+  mv target/${Component}-1.0.jar ${Component}.jar
 }
