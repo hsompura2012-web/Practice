@@ -8,6 +8,8 @@ dnf module disable nodejs -y >> /var/tmp/roboshop.log
 dnf module enable nodejs:20 -y >> /var/tmp/roboshop.log
 dnf install nodejs -y >> /var/tmp/roboshop.log
 
+cp ${Component}.service /etc/systemd/system/${Component}.service
+
 echo -e ${Color} Curl Files download ${CEnd}
 useradd roboshop >> /var/tmp/roboshop.log
 mkdir /app >> /var/tmp/roboshop.log
@@ -23,7 +25,7 @@ npm install >> /var/tmp/roboshop.log
 
 systemService(){
   echo -e ${Color} system service setup and restart  ${CEnd}
-  cp ${Component}.service /etc/systemd/system/${Component}.service
+
   systemctl daemon-reload >> /var/tmp/roboshop.log
   systemctl enable ${Component} >> /var/tmp/roboshop.log
   systemctl restart ${Component} >> /var/tmp/roboshop.log
