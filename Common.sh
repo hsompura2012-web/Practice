@@ -34,17 +34,18 @@ systemService(){
 }
 
 JavaIns(){
+   echo -e ${Color} maven installtion  ${CEnd}
+  dnf install maven -y >> /var/tmp/roboshop.log
+  useradd roboshop >> /var/tmp/roboshop.log
 
-  dnf install maven -y
-  useradd roboshop
+  cp ${Component}.service /etc/systemd/system/${Component}.service >> /var/tmp/roboshop.log
 
-  cp ${Component}.service /etc/systemd/system/${Component}.service
-
-  mkdir /app
-  curl -L -o /tmp/${Component}.zip https://roboshop-artifacts.s3.amazonaws.com/${Component}-v3.zip
-  cd /app
-  unzip /tmp/${Component}.zip
-  cd /app
-  mvn clean package
-  mv target/${Component}-1.0.jar ${Component}.jar
+echo -e ${Color} package installtion  ${CEnd}
+  mkdir /app >> /var/tmp/roboshop.log
+  curl -L -o /tmp/${Component}.zip https://roboshop-artifacts.s3.amazonaws.com/${Component}-v3.zip >> /var/tmp/roboshop.log
+  cd /app >> /var/tmp/roboshop.log
+  unzip /tmp/${Component}.zip >> /var/tmp/roboshop.log
+  cd /app >> /var/tmp/roboshop.log
+  mvn clean package >> /var/tmp/roboshop.log
+  mv target/${Component}-1.0.jar ${Component}.jar >> /var/tmp/roboshop.log
 }
