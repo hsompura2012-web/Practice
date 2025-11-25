@@ -36,7 +36,7 @@
     - name: Install MongoDB
       ansible.builtin.dnf:
         name: mongodb-mongosh
-        state: latest
+        state: present
     - name: Load Master Data
       ansible.builtin.shell: mongosh --host mongodb-dev.harshitsompura.online </app/db/master-data.js
     - name: Make sure a service unit is running
@@ -44,5 +44,6 @@
         state: restarted
         name: catalogue
         enabled: true
+        daemon-reload: true
 
 
