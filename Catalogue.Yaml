@@ -20,7 +20,7 @@
     - name: Unarchive a file that needs to be downloaded
       ansible.builtin.unarchive:
         src: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
-        dest: /usr/share/nginx/html
+        dest: /app
         remote_src: yes
     - name: Install npm package
       community.general.npm:
