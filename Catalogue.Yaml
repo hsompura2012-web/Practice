@@ -1,0 +1,48 @@
+- name: Catalogue setup
+  hosts: all
+  become: true
+  tasks:
+    - name: Install nodeJS
+      ansible.builtin.dnf:
+       name: '@nodejs:20'
+       state: present
+    - name: Add the user roboshop
+      ansible.builtin.user:
+        name: roboshop
+    - name: Recursively remove directory
+      ansible.builtin.file:
+        path: /app
+        state: absent
+    - name: Recursively create directory
+      ansible.builtin.file:
+        path: /app
+        state: directory
+    - name: Unarchive a file that needs to be downloaded
+      ansible.builtin.unarchive:
+        src: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+        dest: /usr/share/nginx/html
+        remote_src: yes
+    - name: Install npm package
+      community.general.npm:
+        path: /app
+    - name: Copy Service file file
+      ansible.builtin.copy:
+        src: catalogue.service
+        dest: /etc/systemd/system/catalogue.service
+    - name: Make sure a service unit is running
+      ansible.builtin.systemd_service:
+        state: restarted
+        name: catalogue
+        enabled: true
+    - name: Copy MongoRepo file
+      ansible.builtin.copy:
+        src: mongo.repo
+        dest: /etc/yum.repos.d/mongo.repo
+    - name: Install MongoDB
+      ansible.builtin.dnf:
+        name: mongodb-mongosh
+        state: latest
+    - name: Load Master Data
+      ansible.builtin.shell: mongosh --host mongodb-dev.harshitsompura.online </app/db/master-data.js
+
+
