@@ -19,7 +19,7 @@
         state: directory
     - name: Unarchive a file that needs to be downloaded
       ansible.builtin.unarchive:
-        src: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+        src: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
         dest: /app
         remote_src: yes
     - name: Install npm package
