@@ -5,7 +5,7 @@
 
     - name: Python3 server installtion
       ansible.builtin.dnf:
-        name: python3 gcc python3-devel
+        name: python3, gcc, python3-devel
         state: latest
 
     - name: Add the user roboshop
