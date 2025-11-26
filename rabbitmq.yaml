@@ -1,0 +1,27 @@
+- name: RabbitMQ installtion
+  hosts: all
+  become: true
+  tasks:
+    - name: RabbitMQ file copy
+      ansible.builtin.copy:
+        src: rabbitmq.repo
+        dest: /etc/yum.repos.d/rabbitmq.repo
+
+    - name: RabbitMQ server installtion
+      ansible.builtin.dnf:
+        name: rabbitmq-server
+        state: latest
+
+
+    - name: Make sure a service unit is running
+      ansible.builtin.systemd_service:
+        state: restarted
+        name: rabbitmq-server
+        enabled: true
+        daemon-reload: true
+
+    - name: RabbitMQ password change
+      ansible.builtin.shell: rabbitmqctl add_user roboshop roboshop123
+
+    - name: RabbitMQ password change
+      ansible.builtin.shell: rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
