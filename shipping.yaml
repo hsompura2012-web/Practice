@@ -1,0 +1,54 @@
+- name: Shipping installtion steps
+  hosts: all
+  become: true
+  tasks:
+    - name: install maven
+      ansible.builtin.dnf:
+        name: maven
+        state: latest
+    - name: Add the user roboshop
+      ansible.builtin.user:
+        name: roboshop
+    - name: Recursively remove directory
+      ansible.builtin.file:
+        path: /app
+        state: absent
+    - name: Recursively create directory
+      ansible.builtin.file:
+        path: /app
+        state: directory
+    - name: Unarchive a file that needs to be downloaded
+      ansible.builtin.unarchive:
+        src: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+        dest: /app
+        remote_src: yes
+    - name: installing mavem dependencies
+      ansible.builtin.shell: mvn clean package ; mv target/shipping-1.0.jar shipping.jar
+
+    - name: Copy Service file file
+      ansible.builtin.copy:
+        src: shipping.service
+        dest: /etc/systemd/system/shipping.service
+
+
+
+    - name: install mysql
+      ansible.builtin.dnf:
+        name: mysql
+        state: latest
+
+    - name: create schema details
+      ansible.builtin.shell: mysql -h mysql-dev.harshitsompura.online -uroot -pRoboShop@1 < /app/db/schema.sql
+
+    - name: create schema app user details
+      ansible.builtin.shell: mysql -h mysql-dev.harshitsompura.online -uroot -pRoboShop@1 < /app/db/app-user.sql
+
+    - name: create schema app user details
+      ansible.builtin.shell: mysql -h mysql-dev.harshitsompura.online -uroot -pRoboShop@1 < /app/db/master-data.sql
+
+    - name: Make sure a service unit is running
+      ansible.builtin.systemd_service:
+        state: restarted
+        name: shipping
+        enabled: true
+        daemon-reload: true
