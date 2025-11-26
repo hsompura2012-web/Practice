@@ -1,0 +1,8 @@
+- name: Redis setup
+  hosts: all
+  become: true
+  tasks:
+    - name: Install redis
+      ansible.builtin.dnf:
+        name: '@redis:7'
+        state: present
